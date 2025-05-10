@@ -9,6 +9,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   firebase_auth
   firebase_core
   firebase_storage
+  permission_handler_windows
   screen_retriever
   url_launcher_windows
   window_manager

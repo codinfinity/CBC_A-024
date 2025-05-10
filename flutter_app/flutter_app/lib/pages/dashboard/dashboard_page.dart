@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flareline/models/user_model.dart';
 import 'package:flareline/pages/dashboard/widgets/spf_selector_widget.dart';
 import 'package:flareline/services/firestore_service.dart';
+import 'package:flareline/services/notification_service.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flareline/pages/layout.dart';
 import 'package:flareline/core/theme/global_colors.dart';
@@ -38,6 +40,12 @@ class _DashboardContentState extends State<_DashboardContent> {
   SPFTrackerModel? _latestSpf;
   double _uvIndex = 0;
   int _maxMinutes = 0;
+  bool _notifiedSafeTimeExpired = false;
+  bool _notifiedHighUV = false;
+  bool _notifiedModerateUV = false;
+  bool _notifiedExtendedExposure = false;
+  int _exposureMinutes = 0;
+
 
   double getMED(String skinType) {
     switch (skinType.toLowerCase()) {
@@ -96,6 +104,12 @@ class _DashboardContentState extends State<_DashboardContent> {
     _uvIndex = uv;
     _maxMinutes = maxMinutes;
     _safeTimeLeft = maxMinutes;
+    _notifiedSafeTimeExpired = false;
+    _notifiedHighUV = false;
+    _notifiedModerateUV = false;
+    _notifiedExtendedExposure = false;
+    _exposureMinutes = 0;
+
   });
 }
 
@@ -106,12 +120,51 @@ class _DashboardContentState extends State<_DashboardContent> {
     loadData();
 
     _timer = Timer.periodic(const Duration(minutes: 1), (_) {
-      setState(() {
-        if (_safeTimeLeft > 0) {
-          _safeTimeLeft--;
-        }
-      });
-    });
+  setState(() {
+    if (_safeTimeLeft > 0) {
+      _safeTimeLeft--;
+      _exposureMinutes++;
+    } else if (!_notifiedSafeTimeExpired) {
+      NotificationService.showNotification(
+        title: 'Exposure Alert',
+        body: 'Your safe exposure time has expired. Please take precautions.',
+      );
+      _notifiedSafeTimeExpired = true;
+    }
+
+    // UV Index-based Notifications
+    if (_uvIndex > 9 && !_notifiedHighUV) {
+      NotificationService.showNotification(
+        title: 'High UV Index',
+        body: 'UV index is extremely high. It is advised to stay indoors.',
+      );
+      _notifiedHighUV = true;
+    } else if (_uvIndex >= 7 && _uvIndex <= 9 && !_notifiedModerateUV) {
+      if (_isSpfActive) {
+        NotificationService.showNotification(
+          title: 'Moderate UV Index',
+          body: 'UV index is high. Wear protective clothing.',
+        );
+      } else {
+        NotificationService.showNotification(
+          title: 'Moderate UV Index',
+          body: 'Apply sunscreen and wear protective clothing.',
+        );
+      }
+      _notifiedModerateUV = true;
+    }
+
+    // Prolonged Exposure Notification
+    if (_exposureMinutes > 240 && !_notifiedExtendedExposure) {
+      NotificationService.showNotification(
+        title: 'Extended Exposure',
+        body: 'You have been exposed to UV for over 4 hours. Consider taking a break.',
+      );
+      _notifiedExtendedExposure = true;
+    }
+  });
+});
+
   }
 
   @override
