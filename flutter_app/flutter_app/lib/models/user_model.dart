@@ -12,7 +12,6 @@ class UserModel {
 
   // Subcollections - Now optional with default values
   final List<NotificationModel> notifications;
-  final List<ExposureLogModel> exposureLogs;
   final List<SPFTrackerModel> spfTracker;
 
   UserModel({
@@ -25,7 +24,6 @@ class UserModel {
     required this.currentUVIndex,
     required this.createdAt,
     this.notifications = const [],
-    this.exposureLogs = const [],
     this.spfTracker = const [],
   });
 
@@ -39,7 +37,6 @@ class UserModel {
     'currentUVIndex': currentUVIndex,
     'createdAt': createdAt.toIso8601String(),
     'notifications': notifications.map((n) => n.toJson()).toList(),
-    'exposureLogs': exposureLogs.map((e) => e.toJson()).toList(),
     'spfTracker': spfTracker.map((s) => s.toJson()).toList(),
   };
 
@@ -55,10 +52,6 @@ class UserModel {
     notifications: map['notifications'] != null
         ? List<NotificationModel>.from(
             map['notifications'].map((n) => NotificationModel.fromJson(n)))
-        : [],
-    exposureLogs: map['exposureLogs'] != null
-        ? List<ExposureLogModel>.from(
-            map['exposureLogs'].map((e) => ExposureLogModel.fromJson(e)))
         : [],
     spfTracker: map['spfTracker'] != null
         ? List<SPFTrackerModel>.from(
@@ -90,7 +83,6 @@ class UserModel {
       currentUVIndex: currentUVIndex ?? this.currentUVIndex,
       createdAt: createdAt ?? this.createdAt,
       notifications: notifications ?? this.notifications,
-      exposureLogs: exposureLogs ?? this.exposureLogs,
       spfTracker: spfTracker ?? this.spfTracker,
     );
   }
@@ -126,38 +118,27 @@ class NotificationModel {
 }
 
 class ExposureLogModel {
-  final DateTime exposureStart;
-  final DateTime exposureEnd;
   final double uvIndex;
-  final Duration duration;
-  final DateTime logDate;
+  final DateTime timestamp;
 
   ExposureLogModel({
-    required this.exposureStart,
-    required this.exposureEnd,
     required this.uvIndex,
-    required this.duration,
-    required this.logDate,
+    required this.timestamp,
   });
 
   Map<String, dynamic> toJson() => {
-        'exposureStart': exposureStart.toIso8601String(),
-        'exposureEnd': exposureEnd.toIso8601String(),
-        'uvIndex': uvIndex,
-        'duration': duration.inSeconds,
-        'logDate': logDate.toIso8601String(),
-      };
+    'uvIndex': uvIndex,
+    'timestamp': Timestamp.fromDate(timestamp),  // Save as Timestamp
+  };
 
   factory ExposureLogModel.fromJson(Map<String, dynamic> map) {
     return ExposureLogModel(
-      exposureStart: DateTime.parse(map['exposureStart']),
-      exposureEnd: DateTime.parse(map['exposureEnd']),
       uvIndex: (map['uvIndex'] ?? 0).toDouble(),
-      duration: Duration(seconds: map['duration'] ?? 0),
-      logDate: DateTime.parse(map['logDate']),
+      timestamp: (map['timestamp'] as Timestamp).toDate(),  // Convert Timestamp back to DateTime
     );
   }
 }
+
 
 class SPFTrackerModel {
   final double spfValue;

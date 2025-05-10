@@ -22,13 +22,14 @@ import 'package:flareline/pages/table/tables_page.dart' deferred as tables;
 import 'package:flareline/pages/spf_tracker/spf_tracker_page.dart' deferred as spfTracker;
 
 
+
 import 'package:flareline/pages/dashboard/dashboard_page.dart';
 import 'package:flareline/pages/history/history_page.dart';
 
 typedef PathWidgetBuilder = Widget Function(BuildContext, String?);
 
 final List<Map<String, Object>> MAIN_PAGES = [
-  {'routerPath': '/', 'widget': const EcommercePage()},
+  {'routerPath': '/', 'widget': DeferredWidget(signIn.loadLibrary, () => signIn.SignInWidget())},
   {'routerPath': '/dashboard', 'widget': DashboardPage()},
   {'routerPath': '/calendar', 'widget': DeferredWidget(calendar.loadLibrary, () => calendar.CalendarPage())},
   {'routerPath': '/profile', 'widget': DeferredWidget(profile.loadLibrary, () => profile.ProfilePage())},
@@ -40,6 +41,8 @@ final List<Map<String, Object>> MAIN_PAGES = [
   {'routerPath': '/formLayout', 'widget': DeferredWidget(formLayout.loadLibrary, () => formLayout.FormLayoutPage())},
   {'routerPath': '/signIn', 'widget': DeferredWidget(signIn.loadLibrary, () => signIn.SignInWidget())},
   {'routerPath': '/signUp', 'widget': DeferredWidget(signUp.loadLibrary, () => signUp.SignUpWidget())},
+  
+  // {'routerPath': '/signUp/skintypeSurvey', 'widget': DeferredWidget(skintypeSurvey.loadLibrary, () => skintypeSurvey.SkinDetectionSurveyPage())},
   {
     'routerPath': '/resetPwd',
     'widget': DeferredWidget(resetPwd.loadLibrary, () => resetPwd.ResetPwdWidget()),

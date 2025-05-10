@@ -35,6 +35,7 @@ class UVIndexWidget extends StatelessWidget {
           child: Row(
             children: [
               const Icon(Icons.wb_sunny, size: 28),
+              
               const SizedBox(width: 10),
               Text("UV Index: $uvIndex", style: const TextStyle(fontSize: 18)),
             ],

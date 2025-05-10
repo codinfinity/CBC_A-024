@@ -34,42 +34,6 @@ class SignUpWidget extends BaseWidget<SignUpProvider> {
     return SignUpProvider(context);
   }
 
-  // Widget contentDesktopWidget(BuildContext context, SignUpProvider viewModel) {
-  //   return Column(mainAxisSize: MainAxisSize.min, children: [
-  //     CommonCard(
-  //       width: MediaQuery.of(context).size.width * 0.8,
-  //       padding: const EdgeInsets.symmetric(vertical: 100),
-  //       child: Row(children: [
-  //         Expanded(
-  //             child: Column(
-  //           children: [
-  //             Text(
-  //               AppLocalizations.of(context)!.appName,
-  //               style:
-  //                   const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-  //             ),
-  //             const SizedBox(
-  //               height: 16,
-  //             ),
-  //             Text(AppLocalizations.of(context)!.slogan),
-  //             const SizedBox(
-  //               height: 16,
-  //             ),
-  //             SizedBox(
-  //               width: 350,
-  //               child: SvgPicture.asset('assets/signin/signup.svg',
-  //                   semanticsLabel: ''),
-  //             )
-  //           ],
-  //         )),
-  //         const VerticalDivider(
-  //           width: 1,
-  //         ),
-  //         Expanded(child: _formWidget(context,viewModel))
-  //       ]),
-  //     ),
-  //   ]);
-  // }
   Widget contentDesktopWidget(BuildContext context, SignUpProvider viewModel) {
     return SingleChildScrollView(
       child: Center(

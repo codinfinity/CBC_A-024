@@ -43,7 +43,7 @@ class _SPFFormWidgetState extends State<SPFFormWidget> {
           .collection('spf_tracker')
           .doc('latest')
           .set({
-        'spfLevel': selectedSPF,
+        'spfvalue':selectedSPF,
         'appliedAt': selectedTime,
         'expiresAt': expiresAt,
       });

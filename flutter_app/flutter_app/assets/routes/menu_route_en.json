@@ -15,7 +15,7 @@
       {
         "icon": "assets/sidebar/dashboard.svg",
         "menuName": "Dashboard",
-        "path": "/"
+        "path": "/dashboardOld"
       },
       {
         "icon": "assets/sidebar/dashboard.svg",

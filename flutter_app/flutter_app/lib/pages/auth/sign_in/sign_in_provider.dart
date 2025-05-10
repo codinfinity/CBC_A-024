@@ -45,7 +45,7 @@ class SignInProvider extends BaseViewModel {
       //  Connect to BLE UV device before navigating
 
 
-      Navigator.of(context).pushNamed('/'); // Navigate to dashboard or home
+      Navigator.of(context).pushNamed('/dashboard'); // Navigate to dashboard or home
     }
   } on FirebaseAuthException catch (e) {
     String message = 'Sign in failed.';
