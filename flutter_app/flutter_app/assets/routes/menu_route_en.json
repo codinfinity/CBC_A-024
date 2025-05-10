@@ -28,6 +28,11 @@
         "path": "/history"
       },
       {
+        "icon": "assets/sidebar/forms.svg",
+        "menuName": "SPF Tracker",
+        "path": "/spfTracker"
+      },
+      {
         "icon": "assets/sidebar/calendar.svg",
         "menuName": "Chatbot",
         "path": "/chatbot"

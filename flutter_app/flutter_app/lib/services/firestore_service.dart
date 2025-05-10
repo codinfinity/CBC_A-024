@@ -1,9 +1,5 @@
-// lib/services/firestore_service.dart
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
-import '../models/spf_tracker_model.dart';
-import '../models/exposure_model.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -27,47 +23,93 @@ class FirestoreService {
     await _db.collection('users').doc(uid).delete();
   }
 
-  /// SPF TRACKING SUBCOLLECTION ----------------------
+  /// SPF TRACKING (handled inside UserModel.spfTracker now) ----------
 
-  Future<void> addSPFTracking(String uid, SpfTrackerModel spfData) async {
-    await _db
-        .collection('users')
-        .doc(uid)
-        .collection('spfTracking')
-        .doc(spfData.appliedAt.toIso8601String())
-        .set(spfData.toJson());
+  Future<void> addSPFTracking(String uid, SPFTrackerModel spfData) async {
+    final userDoc = await _db.collection('users').doc(uid).get();
+    if (!userDoc.exists) return;
+
+    final user = UserModel.fromJson(userDoc.data()!);
+    final updatedSPFList = [...user.spfTracker, spfData];
+
+    await _db.collection('users').doc(uid).update({
+      'spfTracker': updatedSPFList.map((e) => e.toJson()).toList(),
+    });
   }
 
-  Future<List<SpfTrackerModel>> getSPFTracking(String uid) async {
-    final snapshot = await _db.collection('users').doc(uid).collection('spfTracking').get();
-    return snapshot.docs.map((doc) => SpfTrackerModel.fromJson(doc.data())).toList();
+  Future<List<SPFTrackerModel>> getSPFTracking(String uid) async {
+    final doc = await _db.collection('users').doc(uid).get();
+    if (!doc.exists) return [];
+
+    final user = UserModel.fromJson(doc.data()!);
+    return user.spfTracker;
   }
 
-  /// UV EXPOSURE SUBCOLLECTION -----------------------
+  /// Exposure logs are now also embedded
+  Future<void> addUVExposure(String uid, ExposureLogModel uvData) async {
+    final doc = await _db.collection('users').doc(uid).get();
+    if (!doc.exists) return;
 
-  Future<void> addUVExposure(String uid, ExposureModel uvData) async {
-    await _db
-        .collection('users')
-        .doc(uid)
-        .collection('uvData')
-        .doc(uvData.date.toIso8601String())
-        .set(uvData.toJson());
+    final user = UserModel.fromJson(doc.data()!);
+    final updatedLogs = [...user.exposureLogs, uvData];
+
+    await _db.collection('users').doc(uid).update({
+      'exposureLogs': updatedLogs.map((e) => e.toJson()).toList(),
+    });
   }
 
-  Future<List<ExposureModel>> getUVExposure(String uid) async {
-    final snapshot = await _db.collection('users').doc(uid).collection('uvData').get();
-    return snapshot.docs.map((doc) => ExposureModel.fromJson(doc.data())).toList();
-  }
+  Future<void> logExposureIfHighUV(String uid, double uvIndex) async {
+  if (uvIndex <= 3) return;
 
-  /// STREAM UV EXPOSURE DATA (real-time updates) -----
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
 
-  Stream<List<ExposureModel>> streamUVExposure(String uid) {
-    return _db
-        .collection('users')
-        .doc(uid)
-        .collection('uvData')
-        .orderBy('timestamp', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => ExposureModel.fromJson(doc.data())).toList());
+  final exposureLogRef = FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .collection('exposureLogs');
+
+  // You can optimize this to get only today's logs
+  final logsSnap = await exposureLogRef
+      .where('logDate', isEqualTo: today.toIso8601String())
+      .get();
+
+  if (logsSnap.docs.isNotEmpty) {
+    // Extend the last log by 30 minutes
+    final last = ExposureLogModel.fromJson(logsSnap.docs.last.data());
+
+    final updated = ExposureLogModel(
+      exposureStart: last.exposureStart,
+      exposureEnd: now,
+      uvIndex: uvIndex,
+      duration: last.duration + const Duration(minutes: 30),
+      logDate: today,
+    );
+
+    await exposureLogRef.doc(logsSnap.docs.last.id).set(updated.toJson());
+  } else {
+    final newLog = ExposureLogModel(
+      exposureStart: now.subtract(const Duration(minutes: 30)),
+      exposureEnd: now,
+      uvIndex: uvIndex,
+      duration: const Duration(minutes: 30),
+      logDate: today,
+    );
+
+    await exposureLogRef.add(newLog.toJson());
   }
+}
+
+
+  Future<List<ExposureLogModel>> getUVExposure(String uid) async {
+  final logsSnap = await _db
+      .collection('users')
+      .doc(uid)
+      .collection('exposureLogs')
+      .get();
+
+  return logsSnap.docs
+      .map((doc) => ExposureLogModel.fromJson(doc.data()))
+      .toList();
+}
 }

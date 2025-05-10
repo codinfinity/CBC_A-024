@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class UVIndexWidget extends StatelessWidget {
@@ -5,24 +7,40 @@ class UVIndexWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double uvIndex = 6.2; // Replace with real-time from Firebase later
+    final uid = FirebaseAuth.instance.currentUser?.uid;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.orange.shade100,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-          const Text("UV Index Now", style: TextStyle(fontSize: 18)),
-          const SizedBox(height: 10),
-          Text(
-            uvIndex.toStringAsFixed(1),
-            style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: Colors.deepOrange),
+    if (uid == null) return const Text("User not logged in");
+
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance.collection('users').doc(uid).snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const CircularProgressIndicator();
+        final data = snapshot.data!.data() as Map<String, dynamic>;
+        final uvIndex = (data['currentUVIndex'] ?? 0).toDouble();
+
+        Color color;
+        if (uvIndex < 3) {
+          color = Colors.green;
+        } else if (uvIndex < 6) {
+          color = Colors.yellow;
+        }
+        else {color = Colors.red;
+        }
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(12),
           ),
-        ],
-      ),
+          child: Row(
+            children: [
+              const Icon(Icons.wb_sunny, size: 28),
+              const SizedBox(width: 10),
+              Text("UV Index: $uvIndex", style: const TextStyle(fontSize: 18)),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -19,6 +19,7 @@ import 'package:flareline/pages/profile/profile_page.dart' deferred as profile;
 import 'package:flareline/pages/resetpwd/reset_pwd_page.dart' deferred as resetPwd;
 import 'package:flareline/pages/setting/settings_page.dart' deferred as settings;
 import 'package:flareline/pages/table/tables_page.dart' deferred as tables;
+import 'package:flareline/pages/spf_tracker/spf_tracker_page.dart' deferred as spfTracker;
 
 
 import 'package:flareline/pages/dashboard/dashboard_page.dart';
@@ -56,6 +57,10 @@ final List<Map<String, Object>> MAIN_PAGES = [
   {
     'routerPath': '/modal',
     'widget': DeferredWidget(modal.loadLibrary, () => modal.ModalPage())
+  },
+  {
+    'routerPath': '/spfTracker',
+    'widget': DeferredWidget(spfTracker.loadLibrary, () => spfTracker.SPFTrackerPage()),
   },
 ];
 
