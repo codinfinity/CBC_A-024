@@ -18,6 +18,21 @@
         "path": "/"
       },
       {
+        "icon": "assets/sidebar/dashboard.svg",
+        "menuName": "Dashboard1",
+        "path": "/dashboard"
+      },
+      {
+        "icon": "assets/sidebar/dashboard.svg",
+        "menuName": "History",
+        "path": "/history"
+      },
+      {
+        "icon": "assets/sidebar/calendar.svg",
+        "menuName": "Chatbot",
+        "path": "/chatbot"
+      },
+      {
         "icon": "assets/sidebar/calendar.svg",
         "menuName": "Calendar",
         "path": "/calendar"

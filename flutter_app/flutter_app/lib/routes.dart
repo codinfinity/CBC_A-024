@@ -20,12 +20,18 @@ import 'package:flareline/pages/resetpwd/reset_pwd_page.dart' deferred as resetP
 import 'package:flareline/pages/setting/settings_page.dart' deferred as settings;
 import 'package:flareline/pages/table/tables_page.dart' deferred as tables;
 
+
+import 'package:flareline/pages/dashboard/dashboard_page.dart';
+import 'package:flareline/pages/history/history_page.dart';
+
 typedef PathWidgetBuilder = Widget Function(BuildContext, String?);
 
 final List<Map<String, Object>> MAIN_PAGES = [
   {'routerPath': '/', 'widget': const EcommercePage()},
+  {'routerPath': '/dashboard', 'widget': DashboardPage()},
   {'routerPath': '/calendar', 'widget': DeferredWidget(calendar.loadLibrary, () => calendar.CalendarPage())},
   {'routerPath': '/profile', 'widget': DeferredWidget(profile.loadLibrary, () => profile.ProfilePage())},
+  {'routerPath': '/history', 'widget': HistoryPage()},
   {
     'routerPath': '/formElements',
     'widget': DeferredWidget(formElements.loadLibrary, () => formElements.FormElementsPage()),
