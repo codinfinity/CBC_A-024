@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "232402821339",
+    "project_id": "smart-uv-exposure-tracker",
+    "storage_bucket": "smart-uv-exposure-tracker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:232402821339:android:bf8b056ea9cb48000a2cfe",
+        "android_client_info": {
+          "package_name": "top.flareline.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcunYKkIrUB1WKnm4E_BVXNXo3FOXVCeI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
