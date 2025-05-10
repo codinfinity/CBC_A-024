@@ -1,0 +1,1 @@
+C:\Users\sooda\IDP CBC\Smart-UV-Exposure-Tracker\flutter_app\build\app\intermediates\cxx\RelWithDebInfo\1o63t31u\obj\armeabi-v7a

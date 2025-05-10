@@ -1,0 +1,2 @@
+C:/Users/sooda/IDP CBC/Smart-UV-Exposure-Tracker/flutter_app/android/app/.cxx/RelWithDebInfo/1o63t31u/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/sooda/IDP CBC/Smart-UV-Exposure-Tracker/flutter_app/android/app/.cxx/RelWithDebInfo/1o63t31u/armeabi-v7a/CMakeFiles/rebuild_cache.dir
