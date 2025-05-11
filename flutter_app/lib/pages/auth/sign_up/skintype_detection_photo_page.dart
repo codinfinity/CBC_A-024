@@ -94,14 +94,21 @@ class _SkinDetectionPhotoPageState extends State<SkinDetectionPhotoPage> {
     img.Image resizedImage = img.copyResize(oriImage!, width: 224, height: 224);
 
     var input = List.generate(1, (i) => List.generate(224, (y) => List.generate(224, (x) => List.filled(3, 0.0))));
+
     for (int y = 0; y < 224; y++) {
       for (int x = 0; x < 224; x++) {
-        final pixel = resizedImage.getPixel(x, y);
-        input[0][y][x][0] = ((pixel.r / 255.0) - 0.5) * 2.0;
-        input[0][y][x][1] = ((pixel.g / 255.0) - 0.5) * 2.0;
-        input[0][y][x][2] = ((pixel.b / 255.0) - 0.5) * 2.0;
+        final pixel = resizedImage.getPixelSafe(x, y);
+        final r = pixel.r.toDouble();
+        final g = pixel.g.toDouble();
+        final b = pixel.b.toDouble();
+
+        input[0][y][x][0] = r;
+        input[0][y][x][1] = g;
+        input[0][y][x][2] = b;
       }
     }
+
+
 
     var output = List.filled(1 * classLabels.length, 0.0).reshape([1, classLabels.length]);
     interpreter.run(input, output);
@@ -109,7 +116,10 @@ class _SkinDetectionPhotoPageState extends State<SkinDetectionPhotoPage> {
     final scores = List<double>.from(output[0]);
     debugPrint('Model scores: $scores');
 
-    final predictedIndex = scores.indexWhere((e) => e == scores.reduce((a, b) => a > b ? a : b));
+    final maxScore = scores.reduce((a, b) => a > b ? a : b);
+    final predictedIndex = scores.indexOf(maxScore);
+
+    // final predictedIndex = scores.indexWhere((e) => e == scores.reduce((a, b) => a > b ? a : b));
     return classLabels[predictedIndex];
   }
 

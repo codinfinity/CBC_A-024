@@ -22,7 +22,7 @@ import 'package:flareline/pages/table/tables_page.dart' deferred as tables;
 import 'package:flareline/pages/spf_tracker/spf_tracker_page.dart' deferred as spfTracker;
 import 'package:flareline/pages/auth/sign_up/skintype_detection_photo_page.dart' deferred as skintypePhoto;
 import 'package:flareline/pages/auth/sign_up/skintype_survey_page.dart' deferred as skintypeSurvey;
-
+import 'package:flareline/pages/user_guide.dart' deferred as userGuide;
 
 
 import 'package:flareline/pages/dashboard/dashboard_page.dart';
@@ -44,7 +44,7 @@ final List<Map<String, Object>> MAIN_PAGES = [
   {'routerPath': '/signIn', 'widget': DeferredWidget(signIn.loadLibrary, () => signIn.SignInWidget())},
   {'routerPath': '/signUp', 'widget': DeferredWidget(signUp.loadLibrary, () => signUp.SignUpWidget())},
   {'routerPath': '/skintypePhoto', 'widget': DeferredWidget(skintypePhoto.loadLibrary, () => skintypePhoto.SkinDetectionPhotoPage())},
-  // {'routerPath': '/signUp/skintypeSurvey', 'widget': DeferredWidget(skintypeSurvey.loadLibrary, () => skintypeSurvey.SkinDetectionSurveyPage())},
+  {'routerPath': '/skintypeSurvey', 'widget': DeferredWidget(skintypeSurvey.loadLibrary, () => skintypeSurvey.SkinTypeSurveyPage())},
   {
     'routerPath': '/resetPwd',
     'widget': DeferredWidget(resetPwd.loadLibrary, () => resetPwd.ResetPwdWidget()),
@@ -67,6 +67,7 @@ final List<Map<String, Object>> MAIN_PAGES = [
     'routerPath': '/spfTracker',
     'widget': DeferredWidget(spfTracker.loadLibrary, () => spfTracker.SPFTrackerPage()),
   },
+  {'routerPath': '/userGuide', 'widget': DeferredWidget(userGuide.loadLibrary, () => userGuide.GuidePage())},
 ];
 
 class RouteConfiguration {

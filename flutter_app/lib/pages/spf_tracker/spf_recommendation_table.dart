@@ -15,12 +15,33 @@ class SPFRecommendationTable extends StatelessWidget {
     ];
 
     return Table(
-      border: TableBorder.all(),
-      children: rows.map((row) {
-        return TableRow(children: row.map((cell) {
-          return Padding(padding: const EdgeInsets.all(8), child: Text(cell));
-        }).toList());
-      }).toList(),
+      border: TableBorder.all(color: Colors.orange.shade200, width: 1),
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      children: List.generate(rows.length, (index) {
+        final isHeader = index == 0;
+        final backgroundColor = index.isEven
+            ? Colors.orange.shade50
+            : Colors.yellow.shade50;
+
+        return TableRow(
+          decoration: BoxDecoration(
+            color: backgroundColor,
+          ),
+          children: rows[index].map((cell) {
+            return Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                cell,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
+                  color: isHeader ? Colors.deepOrange : Colors.black87,
+                ),
+              ),
+            );
+          }).toList(),
+        );
+      }),
     );
   }
 }
